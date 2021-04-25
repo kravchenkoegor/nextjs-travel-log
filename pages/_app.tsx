@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { AppProps } from 'next/app';
-import '../styles/index.css';
+import AppLayout from 'src/components/shared/AppLayout';
+import 'styles/index.scss';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -9,7 +10,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <title>Travel Log</title>
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </Head>
-      <Component {...pageProps} />
+      <AppLayout>
+        <Component {...pageProps} />
+      </AppLayout>
     </>
   );
 }
