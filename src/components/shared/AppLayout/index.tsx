@@ -5,7 +5,9 @@ const AppLayout: React.FC = ({ children }) => {
   return (
     <>
       <AppHeader />
-      <main className="main-content">{children}</main>
+      <main className="main-content" data-theme="dark">
+        {children}
+      </main>
       <AppFooter />
     </>
   );

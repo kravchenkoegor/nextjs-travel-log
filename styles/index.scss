@@ -12,11 +12,23 @@ body {
   line-height: 1.5;
   color: var(--color-text-primary);
   background-color: var(--color-bg-canvas);
+  // background-color: #151515;
+  // color: white;
   margin: 0;
   padding: 0;
   overflow: hidden;
   min-height: 100vh;
   height: 100vh;
+}
+
+main[data-theme='dark'] {
+  background-color: #151515;
+  // color: white;
+
+  .card {
+    background-color: lighten(#151515, 7%);
+    color: white;
+  }
 }
 
 /* Custom Classes */

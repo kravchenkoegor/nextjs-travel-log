@@ -24,8 +24,6 @@ const Map: React.FC = () => {
 
   const onLoad = useCallback(function onLoadCallback(map) {
     const bounds = new window.google.maps.LatLngBounds();
-    console.log({ map });
-
     // map.fitBounds(bounds);
     setMap(map);
   }, []);

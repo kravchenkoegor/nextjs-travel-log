@@ -1,7 +1,3 @@
-import { useState } from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import CardsList from 'src/components/CardsList';
 import Map from 'src/components/Map';
 
@@ -13,18 +9,16 @@ const HomePage: React.FC = () => {
         </Breadcrumb> */
 
   return (
-    <>
-      <Container fluid className="pr-0">
-        <Row>
-          <Col xl>
-            <CardsList />
-          </Col>
-          <Col xl>
-            <Map />
-          </Col>
-        </Row>
-      </Container>
-    </>
+    <div className="container-fluid pr-0">
+      <div className="row">
+        <div className="col-12 col-xl-6 pr-0">
+          <CardsList />
+        </div>
+        <div className="col-12 col-xl-6">
+          <Map />
+        </div>
+      </div>
+    </div>
   );
 };
 
