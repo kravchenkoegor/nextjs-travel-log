@@ -31,6 +31,11 @@ const AppHeader: React.FC = () => {
             ) : (
               <>
                 <span className="font-weight-bold ml-1">{user.email}</span>
+                <Link href="/places/add">
+                  <Button variant="success" className="text-light ml-3">
+                    Add place
+                  </Button>
+                </Link>
                 <Button
                   variant="primary"
                   className="text-light ml-3"

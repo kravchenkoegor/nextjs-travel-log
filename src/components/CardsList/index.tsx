@@ -1,7 +1,23 @@
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
+import PlaceCard from 'src/components/PlaceCard';
+import { PlacesQuery, PlacesQuery_places } from 'src/generated/PlacesQuery';
 
-const CardsList: React.FC = () => {
+interface Props {
+  places: PlacesQuery_places[];
+}
+
+const CardsList: React.FC<Props> = ({ places }) => {
+  const onValueChange = (key: string, value: string) => {
+    // console.log('onValueChange', { key, value });
+  };
+
+  const handleChange = (key: string) => {
+    // console.log('handleChange:', key);
+
+    return (e: MouseEvent) => {
+      return onValueChange(key, `${e.target}`); // (e.target as any).value);
+    };
+  };
+
   return (
     <div
       className="cards-list"
@@ -12,86 +28,9 @@ const CardsList: React.FC = () => {
         margin: '1rem 0'
       }}
     >
-      <Card style={{ width: '100%' }} className="mb-4">
-        <Card.Img
-          variant="top"
-          src="https://via.placeholder.com/629x180.png"
-          width="629"
-          height="180"
-        />
-        <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
-        </Card.Body>
-      </Card>
-      <Card style={{ width: '100%' }} className="mb-4">
-        <Card.Img
-          variant="top"
-          src="https://via.placeholder.com/629x180.png"
-          width="629"
-          height="180"
-        />
-        <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
-        </Card.Body>
-      </Card>
-      <Card style={{ width: '100%' }} className="mb-4">
-        <Card.Img
-          variant="top"
-          src="https://via.placeholder.com/629x180.png"
-          width="629"
-          height="180"
-        />
-        <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
-        </Card.Body>
-      </Card>
-      <Card style={{ width: '100%' }} className="mb-4">
-        <Card.Img
-          variant="top"
-          src="https://via.placeholder.com/629x180.png"
-          width="629"
-          height="180"
-        />
-        <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
-        </Card.Body>
-      </Card>
-      <Card style={{ width: '100%' }}>
-        <Card.Img
-          variant="top"
-          src="https://via.placeholder.com/629x180.png"
-          width="629"
-          height="180"
-        />
-        <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
-        </Card.Body>
-      </Card>
+      {places.map(p => (
+        <PlaceCard place={p} key={p._id} />
+      ))}
     </div>
   );
 };
