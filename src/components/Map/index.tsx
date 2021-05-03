@@ -1,64 +1,93 @@
-import { useCallback, useState } from 'react';
+import { Dispatch, memo, SetStateAction, useCallback, useState } from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import Spinner from 'src/components/shared/Spinner';
+import SearchBox from 'src/components/SearchBox';
+import { Bounds, Viewport } from 'src/interfaces';
 
 const containerStyle = {
   width: '100%',
   height: 'calc(100vh - 104px)' // 64 header, 32 marginTop, 48 footer = 142
 };
 
-interface MapCenter {
-  lat: number;
-  lng: number;
-}
-
 interface Props {
-  center?: MapCenter;
+  children: JSX.Element | JSX.Element[];
+  setBounds: Dispatch<SetStateAction<Bounds>>;
+  setViewport: Dispatch<SetStateAction<Viewport>>;
+  viewport: Viewport;
 }
-
-const CENTER: MapCenter = {
-  lat: -3.745,
-  lng: -38.523
-};
-
-const ZOOM = 10;
 
 // ⚠️ Make sure you cache the props passed to GoogleMap to avoid re-renders that may harm the performance.
-const Map: React.FC<Props> = ({ center, children }) => {
-  const mapCenter: MapCenter = center || CENTER;
-  const zoom = center ? 13 : ZOOM;
+const Map: React.FC<Props> = ({
+  children,
+  setBounds,
+  setViewport,
+  viewport
+}) => {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
-    preventGoogleFontsLoading: true
+    preventGoogleFontsLoading: true,
+    libraries: ['places']
     // ...otherOptions
   });
 
-  const [map, setMap] = useState(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
 
-  const onLoad = useCallback(function onLoadCallback(map) {
-    const bounds = new window.google.maps.LatLngBounds();
-    // map.fitBounds(bounds);
-    setMap(map);
-  }, []);
+  const onLoad = useCallback(map => setMap(map), []);
+  const onUnmount = useCallback(() => setMap(null), []);
+  const onTilesLoaded = () => {
+    // console.log('onTilesLoaded');
+  };
 
-  const onUnmount = useCallback(function onUnmountCallback() {
-    setMap(null);
-  }, []);
+  const updateBoundsAndViewport = () => {
+    if (!map) return;
+
+    const bounds = map.getBounds() as google.maps.LatLngBounds;
+    if (bounds) {
+      setBounds({
+        ne: {
+          lat: bounds.getNorthEast().lat(),
+          lng: bounds.getNorthEast().lng()
+        },
+        sw: {
+          lat: bounds.getSouthWest().lat(),
+          lng: bounds.getSouthWest().lng()
+        }
+      });
+    }
+
+    setViewport({
+      center: {
+        lat: map.getCenter().lat(),
+        lng: map.getCenter().lng()
+      },
+      zoom: map.getZoom()
+    });
+  };
+
+  const onSelectAddress = (_address: string, lat: number, lng: number) => {
+    if (map) {
+      map.setCenter({ lat, lng });
+      updateBoundsAndViewport();
+    }
+  };
 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={mapCenter}
-      zoom={zoom}
+      {...viewport}
       onLoad={onLoad}
       onUnmount={onUnmount}
+      onTilesLoaded={onTilesLoaded}
+      onDragEnd={updateBoundsAndViewport}
+      onZoomChanged={updateBoundsAndViewport}
+      options={{
+        disableDefaultUI: true,
+        zoomControl: true
+      }}
     >
-      {/* Child components, such as markers, info windows, etc. */}
+      <SearchBox onSelectAddress={onSelectAddress} defaultValue="" />
       {children}
     </GoogleMap>
-  ) : (
-    <Spinner />
-  );
+  ) : null;
 };
 
-export default Map;
+export default memo(Map);

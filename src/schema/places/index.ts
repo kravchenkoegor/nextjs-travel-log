@@ -4,12 +4,36 @@ import {
   Field,
   Float,
   ID,
+  InputType,
   ObjectType,
   Query,
   Resolver
 } from 'type-graphql';
+import { Min, Max } from 'class-validator';
 import { ObjectId } from 'mongodb';
 import { Context } from '../context';
+
+@InputType()
+export class CoordinatesInput {
+  @Min(-90)
+  @Max(90)
+  @Field(_type => Float)
+  lat!: number;
+
+  @Min(-180)
+  @Max(180)
+  @Field(_type => Float)
+  lng!: number;
+}
+
+@InputType()
+export class BoundsInput {
+  @Field(_type => CoordinatesInput)
+  ne!: CoordinatesInput;
+
+  @Field(_type => CoordinatesInput)
+  sw!: CoordinatesInput;
+}
 
 @ObjectType()
 export class Coordinates {
@@ -54,9 +78,22 @@ export class Place {
 @Resolver()
 export class PlacesResolver {
   @Query(_returns => [Place])
-  async places(@Ctx() ctx: Context) {
+  async places(@Arg('bounds') bounds: BoundsInput, @Ctx() ctx: Context) {
     try {
-      const places = await ctx.collection.find({}).toArray();
+      if (!ctx.collection) return [];
+
+      const places = await ctx.collection
+        .find({
+          'coordinates.latitude': {
+            $gte: bounds.sw.lat,
+            $lte: bounds.ne.lat
+          },
+          'coordinates.longitude': {
+            $gte: bounds.sw.lng,
+            $lte: bounds.ne.lng
+          }
+        })
+        .toArray();
       return places;
     } catch (error) {
       console.log('error', error);
