@@ -52,17 +52,7 @@ const SearchBox: React.FC<Props> = ({ onSelectAddress, defaultValue }) => {
   };
 
   return (
-    <Combobox
-      onSelect={handleSelect}
-      style={{
-        left: '0',
-        right: '0',
-        top: '0',
-        padding: '1rem',
-        position: 'absolute',
-        zIndex: 9
-      }}
-    >
+    <Combobox onSelect={handleSelect} className="input-block">
       <ComboboxInput
         id="search"
         value={value}

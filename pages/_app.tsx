@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 import Head from 'next/head';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { HttpLink } from '@apollo/client/link/http';
-import { AuthProvider } from 'src/auth/useAuth';
+import { AuthProvider } from 'src/context/AuthContext';
+import { MapProvider } from 'src/context/MapContext';
 import AppLayout from 'src/components/shared/AppLayout';
 import { AppProps } from 'next/app';
 import 'styles/index.scss';
@@ -19,24 +20,21 @@ function createApolloClient() {
   });
 }
 
-// export function useApollo() {
-//   const client = useMemo(() => createApolloClient(), []);
-//   return client;
-// }
-
 export default function MyApp({ Component, pageProps }: AppProps) {
   const apolloClient = useMemo(() => createApolloClient(), []);
 
   return (
     <ApolloProvider client={apolloClient}>
       <AuthProvider>
-        <Head>
-          <title>Travel Log</title>
-          <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
-        </Head>
-        <AppLayout>
-          <Component {...pageProps} />
-        </AppLayout>
+        <MapProvider>
+          <Head>
+            <title>Travel Log</title>
+            <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+          </Head>
+          <AppLayout>
+            <Component {...pageProps} />
+          </AppLayout>
+        </MapProvider>
       </AuthProvider>
     </ApolloProvider>
   );

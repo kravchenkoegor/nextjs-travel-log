@@ -1,5 +1,5 @@
 import FirebaseForm from 'src/components/shared/FirebaseForm';
-import { useAuth } from 'src/auth/useAuth';
+import { useAuth } from 'src/context/AuthContext';
 import { FormInput } from 'src/interfaces';
 
 // TODO Snackbar with error messages

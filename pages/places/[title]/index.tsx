@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useQuery, gql } from '@apollo/client';
 import { Marker } from '@react-google-maps/api';
-import { useAuth } from 'src/auth/useAuth';
+import { useAuth } from 'src/context/AuthContext';
 import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import Map from 'src/components/Map';

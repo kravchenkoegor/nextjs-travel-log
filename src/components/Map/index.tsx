@@ -1,5 +1,6 @@
 import { Dispatch, memo, SetStateAction, useCallback, useState } from 'react';
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap } from '@react-google-maps/api';
+import { useGoogleMap } from 'src/context/MapContext';
 import SearchBox from 'src/components/SearchBox';
 import { Bounds, Viewport } from 'src/interfaces';
 
@@ -22,12 +23,13 @@ const Map: React.FC<Props> = ({
   setViewport,
   viewport
 }) => {
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
-    preventGoogleFontsLoading: true,
-    libraries: ['places']
-    // ...otherOptions
-  });
+  const { isLoaded, loadError } = useGoogleMap();
+
+  // const { isLoaded, loadError } = useJsApiLoader({
+  //   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
+  //   preventGoogleFontsLoading: true,
+  //   libraries: libraries as any
+  // });
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
 
@@ -72,6 +74,7 @@ const Map: React.FC<Props> = ({
 
   return isLoaded ? (
     <GoogleMap
+      mapContainerClassName="map"
       mapContainerStyle={containerStyle}
       {...viewport}
       onLoad={onLoad}

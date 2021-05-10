@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
-import { useAuth } from 'src/auth/useAuth';
+import { useAuth } from 'src/context/AuthContext';
 
 type Theme = 'light' | 'dark';
 
